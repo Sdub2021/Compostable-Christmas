@@ -13,6 +13,8 @@
             --compost-gold: #DAA520;
             --berry-burst: #C71585;
             --linen-bg: #F5E9D4;
+            --frosty-white: #F0F8FF;
+            --candy-cane-red: #DC143C;
         }
         * {
             margin: 0;
@@ -32,18 +34,9 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            color: #fff;
+            color: var(--frosty-white);
+            background: linear-gradient(rgba(0,100,0,0.5), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1543759814-9ef4b77200b7?fm=webp&w=1200&q=80') center/cover;
             overflow: hidden;
-        }
-        .hero video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-            filter: brightness(0.7);
         }
         .hero-overlay {
             position: absolute;
@@ -56,27 +49,49 @@
         }
         .hero-content h1 {
             font-family: 'Pacifico', cursive;
-            font-size: 4rem;
-            text-shadow: 0 4px 8px rgba(0,0,0,0.5);
-            animation: fadeIn 2s ease-in;
+            font-size: 4.5rem;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.5), 0 0 15px var(--compost-gold);
+            animation: glowPulse 2.5s ease-in-out infinite;
             margin-bottom: 1rem;
         }
+        .hero-content p {
+            font-size: 1.5rem;
+            font-weight: 400;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 2rem;
+        }
         .hero-content button {
-            background: var(--berry-burst);
+            background: linear-gradient(45deg, var(--candy-cane-red), var(--emerald-dark));
             border: none;
             padding: 1rem 2.5rem;
-            color: #fff;
+            color: var(--frosty-white);
             font-family: 'Montserrat', sans-serif;
             font-size: 1.2rem;
             border-radius: 30px;
             cursor: pointer;
             transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-content button::after {
+            content: '✨';
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: right 0.3s, opacity 0.3s;
+        }
+        .hero-content button:hover::after {
+            right: 10px;
+            opacity: 1;
         }
         .hero-content button:hover {
             transform: scale(1.1);
             box-shadow: 0 0 20px var(--compost-gold);
         }
-        .leaf-confetti {
+        .snow-confetti {
             position: absolute;
             top: 0;
             left: 0;
@@ -85,14 +100,14 @@
             pointer-events: none;
             z-index: 1;
         }
-        .leaf {
+        .snowflake {
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background: url('https://cdn.pixabay.com/photo/2016/11/29/04/19/leaf-1867448_1280.png') no-repeat center;
+            width: 15px;
+            height: 15px;
+            background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIHdpZHRoPSIxNXB4IiBoZWlnaHQ9IjE1cHgiIHZpZXdCb3g9IjAgMCAxNSAxNSIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48ZyBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNNy41LDAtMC41LDcuNS03LjUsMTUtMC41LDcuNSAwLDcuNU0wLDcuNSA3LjUsMTUtMC41LDcuNS03LjUsMC03LjUsMTUtMC41LDcuNSAwLDcuNSIgc3Ryb2tlPSIjRjBGOEZGIiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuOCI+PC9wYXRoPjwvZz48L3N2Zz4=') no-repeat center;
             background-size: contain;
-            opacity: 0.7;
-            animation: fall 8s linear infinite;
+            opacity: 0.8;
+            animation: snowFall 12s linear infinite;
         }
         .products {
             padding: 4rem 2rem;
@@ -105,6 +120,7 @@
             font-size: 2.5rem;
             margin-bottom: 2rem;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            animation: fadeIn 1.5s ease-in;
         }
         .products-grid {
             display: grid;
@@ -119,13 +135,17 @@
             padding: 1.5rem;
             border-radius: 15px;
             box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.5s, box-shadow 0.5s;
             position: relative;
             overflow: hidden;
+            animation: popIn 1s ease-out forwards;
+            opacity: 0;
         }
+        .product-card:nth-child(odd) { animation-delay: calc(0.2s * var(--i)); }
+        .product-card:nth-child(even) { animation-delay: calc(0.3s * var(--i)); }
         .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 0 20px var(--compost-gold);
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 0 25px var(--frosty-white);
         }
         .product-card img {
             width: 100%;
@@ -133,6 +153,7 @@
             object-fit: cover;
             border-radius: 10px;
             margin-bottom: 1rem;
+            filter: brightness(0.95);
         }
         .product-card h3 {
             font-family: 'Pacifico', cursive;
@@ -145,81 +166,140 @@
             text-align: center;
             font-size: 1.2rem;
             font-weight: bold;
-            animation: glow 3s infinite alternate;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .ticker p {
+            display: inline-block;
+            animation: marquee 15s linear infinite;
+        }
+        .tree-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--emerald-dark);
+            color: var(--frosty-white);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            box-shadow: 0 0 10px var(--compost-gold);
+        }
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 4px 8px rgba(0,0,0,0.5), 0 0 15px var(--compost-gold); }
+            50% { text-shadow: 0 4px 8px rgba(0,0,0,0.5), 0 0 25px var(--frosty-white); }
+        }
+        @keyframes snowFall {
+            0% { transform: translateY(-100vh) rotate(0deg) translateX(0); opacity: 0.8; }
+            50% { transform: translateY(50vh) rotate(180deg) translateX(calc(50px * var(--drift))); opacity: 0.9; }
+            100% { transform: translateY(100vh) rotate(360deg) translateX(calc(50px * var(--drift))); opacity: 0; }
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes fall {
-            0% { transform: translateY(-100vh) rotate(0deg); opacity: 0.7; }
-            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-        }
-        @keyframes glow {
-            from { box-shadow: 0 0 10px var(--compost-gold); }
-            to { box-shadow: 0 0 20px var(--emerald-light); }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
         }
         @media (max-width: 600px) {
-            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content h1 { font-size: 2.8rem; }
+            .hero-content p { font-size: 1.2rem; }
             .hero-content button { padding: 0.8rem 1.5rem; font-size: 1rem; }
             .products { padding: 2rem 1rem; }
             .products h2 { font-size: 2rem; }
+            .snowflake { width: 10px; height: 10px; }
         }
     </style>
 </head>
 <body>
     <header class="hero">
-        <video autoplay muted loop src="https://player.vimeo.com/external/123456789.m3u8?s=abc123" poster="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?fm=webp&w=800"></video>
         <div class="hero-overlay"></div>
-        <div class="leaf-confetti">
-            <div class="leaf" style="left: 10%; animation-delay: 0s;"></div>
-            <div class="leaf" style="left: 30%; animation-delay: 2s;"></div>
-            <div class="leaf" style="left: 50%; animation-delay: 4s;"></div>
-            <div class="leaf" style="left: 70%; animation-delay: 6s;"></div>
-            <div class="leaf" style="left: 90%; animation-delay: 8s;"></div>
+        <div class="snow-confetti">
+            <div class="snowflake" style="left: 5%; animation-delay: 0s; --drift: 1;"></div>
+            <div class="snowflake" style="left: 15%; animation-delay: 1s; --drift: -0.5;"></div>
+            <div class="snowflake" style="left: 25%; animation-delay: 2s; --drift: 0.8;"></div>
+            <div class="snowflake" style="left: 35%; animation-delay: 3s; --drift: -1;"></div>
+            <div class="snowflake" style="left: 45%; animation-delay: 4s; --drift: 0.3;"></div>
+            <div class="snowflake" style="left: 55%; animation-delay: 5s; --drift: 0.7;"></div>
+            <div class="snowflake" style="left: 65%; animation-delay: 6s; --drift: -0.8;"></div>
+            <div class="snowflake" style="left: 75%; animation-delay: 7s; --drift: 0.4;"></div>
+            <div class="snowflake" style="left: 85%; animation-delay: 8s; --drift: -0.6;"></div>
+            <div class="snowflake" style="left: 95%; animation-delay: 9s; --drift: 1.2;"></div>
         </div>
         <div class="hero-content">
-            <h1>Gift Green, Grow Love</h1>
-            <button onclick="window.location.href='/shop'">Shop Zero-Waste Now</button>
+            <h1>Compostable Christmas Magic</h1>
+            <p>Zero-Waste Gifts to Save the Earth 🌲✨</p>
+            <button onclick="window.location.href='#products'">Shop Holiday Eco-Gifts</button>
+            <div class="tree-badge">Every Gift Plants a Tree 🌱</div>
         </div>
     </header>
     <section class="products">
-        <h2>Our Eco-Gifts</h2>
+        <h2>Our Compostable Holiday Gifts</h2>
         <div class="products-grid">
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1629994911758-eb8f24eb53f4?fm=webp&w=400" alt="Compostable garbage bags in a festive eco-kitchen">
+            <div class="product-card" style="--i: 1;">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1629994911758-eb8f24eb53f4?fm=webp&w=400" alt="Compostable garbage bags in a festive eco-kitchen">
                 <h3>Compostable Garbage Bags</h3>
                 <p>$15 – Plant-based bags that break down in 90 days.</p>
             </div>
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?fm=webp&w=400" alt="Beeswax wraps on a festive eco-table">
+            <div class="product-card" style="--i: 2;">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?fm=webp&w=400" alt="Beeswax wraps on a festive eco-table">
                 <h3>Beeswax Wraps</h3>
                 <p>$18 – Reusable, compostable love for your leftovers.</p>
             </div>
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?fm=webp&w=400" alt="Seed paper cards sprouting wildflowers">
+            <div class="product-card" style="--i: 3;">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1519681393784-d120267933ba?fm=webp&w=400" alt="Seed paper cards sprouting wildflowers">
                 <h3>Seed Paper Cards</h3>
                 <p>$12 – Plant your holiday wishes, grow wildflowers.</p>
             </div>
-            <div class="product-card">
-                <img src="https://images.unsplash.com/photo-1503435980610-a51f3ddfee50?fm=webp&w=400" alt="Bamboo toilet paper in kraft packaging">
+            <div class="product-card" style="--i: 4;">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1503435980610-a51f3ddfee50?fm=webp&w=400" alt="Bamboo toilet paper in kraft packaging">
                 <h3>Bamboo Toilet Paper</h3>
                 <p>$20 – Soft, tree-free, compostable rolls.</p>
+            </div>
+            <div class="product-card" style="--i: 5;">
+                <img loading="lazy" src="https://m.media-amazon.com/images/I/71gB69M0wFL._AC_SL1500_.jpg" alt="Compostable cutlery set for holiday feasts">
+                <h3>Compostable Cutlery Set</h3>
+                <p>$22 – Biodegradable utensils for eco-friendly feasts.</p>
+            </div>
+            <div class="product-card" style="--i: 6;">
+                <img loading="lazy" src="https://m.media-amazon.com/images/I/91nFKBV4gSL._AC_SL1500_.jpg" alt="Hemp gift wrap in festive eco-packaging">
+                <h3>Hemp Gift Wrap</h3>
+                <p>$10 – Reusable, compostable holiday wrapping.</p>
+            </div>
+            <div class="product-card" style="--i: 7;">
+                <img loading="lazy" src="https://m.media-amazon.com/images/I/71k0j5YqHSL._AC_SL1500_.jpg" alt="Recycled glass ornaments for eco-tree decor">
+                <h3>Recycled Glass Ornaments</h3>
+                <p>$25 – Handcrafted, sustainable tree sparkle.</p>
+            </div>
+            <div class="product-card" style="--i: 8;">
+                <img loading="lazy" src="https://m.media-amazon.com/images/I/81xW1e7Z0LL._AC_SL1500_.jpg" alt="Organic cotton stockings for holiday decor">
+                <h3>Organic Cotton Stockings</h3>
+                <p>$28 – Sustainable, cozy holiday stockings.</p>
+            </div>
+            <div class="product-card" style="--i: 9;">
+                <img loading="lazy" src="https://m.media-amazon.com/images/I/61X0X2k0K7L._AC_SL1500_.jpg" alt="Biodegradable glitter for eco-friendly sparkle">
+                <h3>Biodegradable Glitter</h3>
+                <p>$14 – Sparkle without microplastics.</p>
             </div>
         </div>
     </section>
     <footer class="ticker">
-        <p>Together, we’ve saved 5,678 lbs of waste & planted 1,234 trees! 🌱 Join the love.</p>
+        <p>Together, we’ve saved 5,678 lbs of waste & planted 1,234 trees! 🌱 Join the Compostable Christmas love.</p>
     </footer>
     <script>
-        // Dynamic leaf confetti
-        const confetti = document.querySelector('.leaf-confetti');
-        for (let i = 0; i < 10; i++) {
-            const leaf = document.createElement('div');
-            leaf.className = 'leaf';
-            leaf.style.left = `${Math.random() * 100}%`;
-            leaf.style.animationDelay = `${Math.random() * 10}s`;
-            confetti.appendChild(leaf);
+        // Dynamic snowflake confetti
+        const confetti = document.querySelector('.snow-confetti');
+        for (let i = 0; i < 5; i++) {
+            const snowflake = document.createElement('div');
+            snowflake.className = 'snowflake';
+            snowflake.style.left = `${Math.random() * 100}%`;
+            snowflake.style.animationDelay = `${Math.random() * 10}s`;
+            snowflake.style.setProperty('--drift', Math.random() * 2 - 1);
+            confetti.appendChild(snowflake);
         }
     </script>
 </body>
